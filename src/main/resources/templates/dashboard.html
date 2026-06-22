@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/base :: head('Dashboard')"></head>
+<body th:replace="layout/base :: layout(~{::content})">
+
+<div th:fragment="content">
+
+    <div class="text-center mb-4">
+        <h1 class="text-primary">🏋️ Dashboard del Gym</h1>
+        <p class="lead">Resumen general del sistema</p>
+    </div>
+
+    <div th:if="${!expiredMemberships.isEmpty()}" class="alert alert-danger">
+        <strong>Membresías vencidas:</strong>
+        <ul class="mb-0">
+            <li th:each="m : ${expiredMemberships}"
+                th:text="${m.client.fullName + ' - ' + m.planName + ' (venció: ' + m.endDate + ')'}">
+            </li>
+        </ul>
+    </div>
+
+    <div th:if="${!endingToday.isEmpty()}" class="alert alert-warning">
+        <strong>Vencen hoy:</strong>
+        <ul class="mb-0">
+            <li th:each="m : ${endingToday}"
+                th:text="${m.client.fullName + ' - ' + m.planName + ' (vence hoy: ' + m.endDate + ')'}">
+            </li>
+        </ul>
+    </div>
+
+    <div th:if="${!endingSoon.isEmpty()}" class="alert alert-info">
+        <strong>Próximas a vencer:</strong>
+        <ul class="mb-0">
+            <li th:each="m : ${endingSoon}"
+                th:text="${m.client.fullName + ' - ' + m.planName + ' (vence: ' + m.endDate + ')'}">
+            </li>
+        </ul>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card text-bg-primary shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Clientes</h5>
+                    <p class="display-6" th:text="${totalClients}"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-bg-success shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Membresías activas</h5>
+                    <p class="display-6" th:text="${activeMemberships}"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-bg-danger shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Membresías vencidas</h5>
+                    <p class="display-6" th:text="${expiredMembershipsCount}"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card text-bg-warning shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Pagos registrados</h5>
+                    <p class="display-6" th:text="${totalPayments}"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6" th:if="${isAdmin}">
+            <div class="card text-bg-dark shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Ingresos del mes</h5>
+                    <p class="display-6" th:text="${monthlyIncome}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4 justify-content-center">
+
+        <div class="col-md-2 mb-3 text-center">
+            <a href="/clients" class="btn btn-primary w-100 shadow-sm">
+                👤 Clientes
+            </a>
+        </div>
+
+        <div class="col-md-2 mb-3 text-center">
+            <a href="/memberships/list" class="btn btn-success w-100 shadow-sm">
+                💳 Membresías
+            </a>
+        </div>
+
+        <div class="col-md-2 mb-3 text-center">
+            <a href="/payments" class="btn btn-warning w-100 shadow-sm">
+                💰 Pagos
+            </a>
+        </div>
+
+        <div class="col-md-2 mb-3 text-center" th:if="${isAdmin}">
+            <a href="/reports/payments" class="btn btn-dark w-100 shadow-sm">
+                📊 Reportes
+            </a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

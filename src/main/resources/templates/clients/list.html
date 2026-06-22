@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/base :: head('Clientes')"></head>
+<body th:replace="layout/base :: layout(~{::content})">
+
+<div th:fragment="content">
+
+    <h1 class="mb-4">Lista de Clientes</h1>
+
+    <button class="btn btn-success mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#clientModal"
+            onclick="resetClientForm()">
+        Nuevo Cliente
+    </button>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="client : ${clients}">
+            <td th:text="${client.fullName}"></td>
+            <td th:text="${client.phone}"></td>
+            <td th:text="${client.email}"></td>
+            <td th:text="${client.status}"></td>
+            <td>
+                <button type="button"
+                        class="btn btn-warning btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#clientModal"
+                        th:attr="data-id=${client.id},
+                                 data-fullname=${client.fullName},
+                                 data-phone=${client.phone},
+                                 data-email=${client.email},
+                                 data-identification=${client.identification},
+                                 data-startdate=${client.startDate},
+                                 data-status=${client.status}"
+                        onclick="loadClientData(this)">
+                    Editar
+                </button>
+
+                <a th:href="@{/clients/delete/{id}(id=${client.id})}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('¿Seguro que deseas eliminar este cliente?');">
+                    Eliminar
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="clientModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clientModalLabel">Nuevo Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <form th:action="@{/clients}" th:object="${client}" method="post">
+                    <div class="modal-body">
+
+                        <input type="hidden" th:field="*{id}" id="clientId"/>
+
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" th:field="*{fullName}" class="form-control" id="fullName"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" th:field="*{phone}" class="form-control" id="phone"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" th:field="*{email}" class="form-control" id="email"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Identificación</label>
+                            <input type="text" th:field="*{identification}" class="form-control" id="identification"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Fecha inicio</label>
+                            <input type="date" th:field="*{startDate}" class="form-control" id="startDate"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Estado</label>
+                            <select th:field="*{status}" class="form-select" id="status">
+                                <option value="ACTIVE">ACTIVO</option>
+                                <option value="EXPIRED">VENCIDO</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-success">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        function resetClientForm() {
+            document.getElementById("clientModalLabel").innerText = "Nuevo Cliente";
+            document.getElementById("clientId").value = "";
+            document.getElementById("fullName").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("identification").value = "";
+            document.getElementById("startDate").value = "";
+            document.getElementById("status").value = "ACTIVE";
+        }
+
+        function loadClientData(button) {
+            document.getElementById("clientModalLabel").innerText = "Editar Cliente";
+            document.getElementById("clientId").value = button.getAttribute("data-id");
+            document.getElementById("fullName").value = button.getAttribute("data-fullname");
+            document.getElementById("phone").value = button.getAttribute("data-phone");
+            document.getElementById("email").value = button.getAttribute("data-email");
+            document.getElementById("identification").value = button.getAttribute("data-identification");
+            document.getElementById("startDate").value = button.getAttribute("data-startdate");
+            document.getElementById("status").value = button.getAttribute("data-status");
+        }
+    </script>
+
+</div>
+
+</body>
+</html>
