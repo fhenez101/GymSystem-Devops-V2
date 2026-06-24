@@ -22,6 +22,15 @@ target/
 *.log
 .DS_Store
 
+### Secret keys ###
+terraform/.terraform/
+terraform/*.pem
+terraform/*.tfstate
+terraform/*.tfstate.backup
+*.pem
+*.tfstate
+*.tfstate.backup
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

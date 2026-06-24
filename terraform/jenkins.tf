@@ -1,0 +1,17 @@
+resource "aws_instance" "jenkins_server" {
+  ami           = data.aws_ami.amazon_linux.id
+  instance_type = "t3.small"
+  key_name      = "gymsystem-key2"
+
+  vpc_security_group_ids = [
+    aws_security_group.gymsystem_sg.id
+  ]
+  root_block_device {
+    volume_size = 20
+    volume_type = "gp3"
+  }
+
+  tags = {
+    Name = "Jenkins-Server"
+  }
+}
