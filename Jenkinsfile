@@ -10,16 +10,16 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Test') {
             steps {
                 sh 'chmod +x mvnw'
-                sh './mvnw clean package -DskipTests'
+                sh './mvnw test'
             }
         }
 
-        stage('Docker Build') {
+        stage('Build') {
             steps {
-                sh 'docker build -t fhenez/gymsystem:jenkins .'
+                sh './mvnw clean package -DskipTests'
             }
         }
 
