@@ -35,6 +35,14 @@ resource "aws_security_group" "gymsystem_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description = "SonarQube"
+    from_port   = 9000
+    to_port     = 9000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   tags = {
     Name = "gymsystem-sg"
   }
@@ -43,7 +51,9 @@ resource "aws_security_group" "gymsystem_sg" {
 resource "aws_instance" "gymsystem_server" {
   ami           = data.aws_ami.amazon_linux.id
   instance_type = "t3.micro"
-  key_name = "gymsystem-key2"
+  key_name      = "gymsystem-key2"
+
+  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
 
   vpc_security_group_ids = [
     aws_security_group.gymsystem_sg.id
